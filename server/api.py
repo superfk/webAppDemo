@@ -28,13 +28,15 @@ class PyServerAPI(object):
         await self.register(websocket)
         async for message in websocket:
             try:
-                # print(message)
-                # logger.debug(message)
                 msg = json.loads(message)
                 cmd = msg["cmd"]
                 data = msg["data"]
                 if cmd == 'inited':
                     await self.sendMsg(websocket, 'reply_inited', "Server Init OK")
+                elif cmd == 'add':
+                    # {'value1': 1, 'value2': 3}
+                    result = data['value1'] + data['value2']
+                    await self.sendMsg(websocket, 'reply_result', result)
                 else:
                     pass
             except Exception as e:

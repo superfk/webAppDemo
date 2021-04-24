@@ -2,6 +2,7 @@
 const num1 = document.getElementById("num1");
 const num2 = document.getElementById("num2");
 const btn = document.getElementById("btn");
+const result = document.getElementById("result");
 let path, ws;
 
 //使用 WebSocket 的網址向 Server 開啟連結
@@ -36,10 +37,13 @@ const connect = () => {
         case "reply_inited":
           console.log(data);
           break;
+        case "reply_result":
+          result.innerHTML = `<h1>${data}</h1>`;
+          break;
         default:
       }
     } catch (error) {
-      msg.innerHTML = error;
+      console.log(error);
     }
   };
 
@@ -62,11 +66,12 @@ num2.addEventListener("change", (e) => {
 });
 
 btn.addEventListener("click", (event) => {
-  const v1 = num1.value;
-  const v2 = num2.value;
-  ws.send(JSON.stringify({
-    cmd: "add",
-    value1: v1,
-    value2: v2,
-  }));
+  const v1 = parseInt(num1.value);
+  const v2 = parseInt(num2.value);
+  ws.send(
+    JSON.stringify({
+      cmd: "add",
+      data: { value1: v1, value2: v2 },
+    })
+  );
 });
